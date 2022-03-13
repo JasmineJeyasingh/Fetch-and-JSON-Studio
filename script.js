@@ -4,21 +4,29 @@ window.addEventListener("load", function () {
     "https://handlers.education.launchcode.org/static/astronauts.json"
   ).then(function (response) {
     response.json().then(function (json) {
+      let sortedAstronaut = json.sort(function (a, b) {
+        return b.hoursInSpace - a.hoursInSpace;
+      });
       let astronaut = document.getElementById("container");
-      for (let i = 0; i < json.length; i++) {
-        astronaut.innerHTML += `
+
+      astronaut.innerHTML += `<h3>Astronaut Count: ${sortedAstronaut.length}</h3>`;
+      sortedAstronaut.forEach(function (list) {
+        let myHtml = `
         <div class="astronaut">
         <div class="bio">
-           <h3>${json[i].firstName} ${json[i].lastName}</h3>
+           <h3>${list.firstName} ${list.lastName}</h3>
            <ul>
-              <li>Hours In Space: ${json[i].hoursInSpace}</li>
-              <li>Active: ${json[i].active}</li>
-              <li>Skills: ${json[i].skills}</li>
+              <li>Hours In Space: ${list.hoursInSpace}</li>
+              <li ${list.active ? "style='color: green'" : ""}>Active: ${
+          list.active
+        }</li>
+              <li>Skills: ${list.skills.join(", ")}</li>
            </ul>
         </div>
-        <img class="avatar" src="${json[i].picture}">
+        <img class="avatar" src="${list.picture}">
      </div>`;
-      }
+        astronaut.innerHTML += myHtml;
+      });
     });
   });
 });
